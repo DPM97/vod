@@ -18,20 +18,14 @@ fn main() {
             }
         );
         match cap {
-            Some(x) => {
-                // println!("{:?}", x);
-                // println!("{}", str::from_utf8(&x).unwrap());
-
-                match image::load_from_memory_with_format(&x, ImageFormat::Jpeg) {
-                    Ok(_img) => {
-                        println!("input in jpg");
-                        std::fs::write("output.jpeg", x).unwrap();
-                    }
-                    Err(_) => {
-                        println!("input is not jgp");
-                    }
+            Some(x) => match image::load_from_memory_with_format(&x, ImageFormat::Jpeg) {
+                Ok(_img) => {
+                    println!("input in jpg");
                 }
-            }
+                Err(_) => {
+                    println!("input is not jgp");
+                }
+            },
             None => {}
         }
         thread::sleep(time::Duration::from_secs(1));
