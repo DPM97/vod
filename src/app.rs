@@ -4,7 +4,6 @@ use image::{load_from_memory, DynamicImage, ImageError};
 
 use crate::get_last_capture;
 
-/// shhhhh
 pub struct UI {}
 
 impl Default for UI {
