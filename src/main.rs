@@ -1,34 +1,13 @@
-use image::ImageFormat;
-use std::{
-    thread,
-    time::{self},
-};
+use std::thread;
 
-use screenshot::{get_last_capture, start_capture};
+use screenshot::{start_capture, UI};
 
 fn main() {
-    thread::spawn(move || loop {
-        let cap = get_last_capture();
-        println!(
-            "{}",
-            if cap.is_none() {
-                "no frame captured"
-            } else {
-                "frame captured"
-            }
-        );
-        match cap {
-            Some(x) => match image::load_from_memory_with_format(&x, ImageFormat::Jpeg) {
-                Ok(_img) => {
-                    println!("input in jpg");
-                }
-                Err(_) => {
-                    println!("input is not jgp");
-                }
-            },
-            None => {}
-        }
-        thread::sleep(time::Duration::from_secs(1));
-    });
-    start_capture();
+    thread::spawn(start_capture);
+    start_gui();
+}
+
+fn start_gui() {
+    let native_options = eframe::NativeOptions::default();
+    eframe::run_native("vod", native_options, Box::new(|cc| Box::new(UI::new(cc))));
 }

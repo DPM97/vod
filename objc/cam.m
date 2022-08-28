@@ -1,4 +1,5 @@
-#import "cam.h"
+#import <AVFoundation/AVFoundation.h>
+#import <AppKit/AppKit.h>
 
 @interface Capture : NSObject<AVCaptureVideoDataOutputSampleBufferDelegate>
 @property (nonatomic, retain) AVCaptureSession *session;
@@ -54,7 +55,7 @@ static Capture *_sharedInstance = nil;
                                 forKey:@"jpgData"];
   }
   // wait so that the capture rate is about 60fps
-  [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.016]];
+  [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.033]];
   // CFRunLoopStop(runLoop);
 }
 
@@ -76,7 +77,7 @@ void start_capture_loop() {
 
     AVCaptureVideoDataOutput *output =
         [[AVCaptureVideoDataOutput alloc] init];
-    [output setSampleBufferDelegate:capture queue:dispatch_get_main_queue()];
+    [output setSampleBufferDelegate:capture queue:dispatch_queue_create("Lots of requests", NULL)];
     NSLog(@"[Output] %@", output);
 
     AVCaptureSession *session = [[AVCaptureSession alloc] init];

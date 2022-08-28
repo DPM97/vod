@@ -12,6 +12,9 @@
 
 use objc_foundation::INSData;
 
+mod app;
+pub use app::UI;
+
 mod sys {
     use objc_foundation::NSData;
     #[link(name = "cam")]
