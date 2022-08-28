@@ -9,6 +9,7 @@ use crate::get_last_capture;
 
 #[derive(Debug)]
 enum StreamState {
+    STARTING,
     GOOD,
     BAD,
 }
@@ -21,7 +22,7 @@ pub struct UI {
 impl Default for UI {
     fn default() -> Self {
         Self {
-            stream_state: StreamState::BAD,
+            stream_state: StreamState::STARTING,
             capture_status_message: Ok(String::default()),
         }
     }
@@ -69,14 +70,20 @@ impl eframe::App for UI {
                 self.stream_state = StreamState::GOOD;
             }
             None => {
-                image_area.centered_and_justified(|image_area| {
-                    image_area.label(
-                        RichText::new("Error: Failed to parse frame data.")
-                            .font(FontId::proportional(40.0))
-                            .color(Color32::RED),
-                    );
+                image_area.centered_and_justified(|image_area| match self.stream_state {
+                    StreamState::STARTING => {
+                        image_area
+                            .label(RichText::new("Connecting...").font(FontId::proportional(40.0)));
+                    }
+                    _ => {
+                        image_area.label(
+                            RichText::new("Error: Failed to parse frame data.")
+                                .font(FontId::proportional(40.0))
+                                .color(Color32::RED),
+                        );
+                        self.stream_state = StreamState::BAD;
+                    }
                 });
-                self.stream_state = StreamState::BAD;
             }
         });
 
