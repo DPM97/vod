@@ -2,8 +2,8 @@
 #import <AppKit/AppKit.h>
 
 @interface Capture : NSObject<AVCaptureVideoDataOutputSampleBufferDelegate>
-@property (nonatomic, retain) AVCaptureSession *session;
-@property (nonatomic, retain) NSData *jpgData;
+@property (atomic, retain) AVCaptureSession *session;
+@property (atomic, retain) NSData *jpgData;
 + (Capture *)sharedInstance;
 - (void)captureOutput:(AVCaptureOutput *)output
     didOutputSampleBuffer:(CMSampleBufferRef)buffer
@@ -25,9 +25,14 @@ static Capture *_sharedInstance = nil;
     didOutputSampleBuffer:(CMSampleBufferRef)buffer
            fromConnection:(AVCaptureConnection *)connection {
   @autoreleasepool {
-    [[Capture sharedInstance] setValue:[[[NSBitmapImageRep alloc] initWithCIImage:[CIImage imageWithCVImageBuffer:CMSampleBufferGetImageBuffer(buffer)]] representationUsingType:NSJPEGFileType
-                                                                                                                                                                      properties:@{}]
-                                forKey:@"jpgData"];
+    CIImage *ciImage =
+        [CIImage imageWithCVImageBuffer:CMSampleBufferGetImageBuffer(buffer)];
+    NSBitmapImageRep *bitmapRep =
+        [[NSBitmapImageRep alloc] initWithCIImage:ciImage];
+    NSData *jpgData =
+        [bitmapRep representationUsingType:NSJPEGFileType
+                                properties:@{}];
+    [[Capture sharedInstance] setValue:jpgData forKey:@"jpgData"];
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.033]];
   }
 }
@@ -63,7 +68,5 @@ void start_capture_loop() {
 }
 
 NSData *get_last_capture() {
-  @autoreleasepool {
-    return [Capture sharedInstance].jpgData;
-  }
+  return [Capture sharedInstance].jpgData;
 }
