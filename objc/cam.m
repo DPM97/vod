@@ -11,8 +11,6 @@
 @end
 
 @implementation Capture
-@synthesize session;
-
 static Capture *_sharedInstance = nil;
 
 + (Capture *)sharedInstance {
@@ -33,7 +31,6 @@ static Capture *_sharedInstance = nil;
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.033]];
   }
 }
-
 @end
 
 void start_capture_loop() {
@@ -66,5 +63,7 @@ void start_capture_loop() {
 }
 
 NSData *get_last_capture() {
-  return [Capture sharedInstance].jpgData;
+  @autoreleasepool {
+    return [Capture sharedInstance].jpgData;
+  }
 }
