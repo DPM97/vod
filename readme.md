@@ -8,6 +8,7 @@ The only functionality currently implemented is the ability to take a picture of
 
 # References
 [fetching webcam data](https://gist.github.com/bellbind/6954679)
+
 [original kcam post](https://www.reddit.com/r/rust/comments/wyjhmo/handy_linux_webcam_app_wegui/)
 
 # Compilation
