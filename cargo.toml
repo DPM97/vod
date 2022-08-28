@@ -1,0 +1,16 @@
+[package]
+name = "screenshot"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+
+[dependencies]
+objc-foundation = "0.1.1"
+objc_id = "0.1.1"
+image = "0.24.3"
+
+[build-dependencies]
+cc = "1.0.17"
