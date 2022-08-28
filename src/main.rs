@@ -1,6 +1,6 @@
 use std::thread;
 
-use screenshot::{start_capture, UI};
+use vod::{start_capture, UI};
 
 fn main() {
     thread::spawn(start_capture);

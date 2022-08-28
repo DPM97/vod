@@ -12,5 +12,5 @@ The only functionality currently implemented is the ability to take a picture of
 [original kcam post](https://www.reddit.com/r/rust/comments/wyjhmo/handy_linux_webcam_app_wegui/)
 
 # Compilation
-```cargo build --release && ./target/release/screenshot```
+```cargo build --release && ./target/release/vod```
 
