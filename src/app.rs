@@ -101,12 +101,31 @@ fn get_next_frame() -> Option<ColorImage> {
                 return None;
             }
             let buf: DynamicImage = buf.unwrap();
-            let img: image::ImageBuffer<image::Rgba<u8>, Vec<u8>> = buf.to_rgba8();
+            let mut img: image::ImageBuffer<image::Rgba<u8>, Vec<u8>> = buf.to_rgba8();
+            img.flip();
             let size: [usize; 2] = [img.width() as _, img.height() as _];
             return Some(ColorImage::from_rgba_unmultiplied(
                 size,
                 img.as_flat_samples().as_slice(),
             ));
+        }
+    }
+}
+
+trait BufferManipulations {
+    fn flip(&mut self);
+}
+
+impl BufferManipulations for image::ImageBuffer<image::Rgba<u8>, Vec<u8>> {
+    fn flip(&mut self) {
+        let width: u32 = self.width();
+        let height: u32 = self.height();
+        for x in 1..(width as f32 / 2 as f32).floor() as u32 {
+            for y in 1..height {
+                let tmp: [u8; 4] = self.get_pixel(x, y).0.clone();
+                self.get_pixel_mut(x, y).0 = self.get_pixel(width - x, y).0;
+                self.get_pixel_mut(width - x, y).0 = tmp;
+            }
         }
     }
 }
